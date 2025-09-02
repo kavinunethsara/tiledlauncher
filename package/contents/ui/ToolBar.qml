@@ -40,7 +40,7 @@ ColumnLayout {
         border.width: 1
         border.color: Kirigami.Theme.View
 
-        opacity: 0.1
+        opacity: 0.25
     }
 
     ToolbarButton {
