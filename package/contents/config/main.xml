@@ -44,6 +44,9 @@
     <entry name="displayCategories" type="Bool">
       <default>true</default>
     </entry>
+    <entry name="appsViewSize" type="Int">
+      <default>12</default>
+    </entry>
 
     <entry name="displayUserInfo" type="Bool">
       <default>true</default>

@@ -18,6 +18,7 @@ KCM.SimpleKCM {
     id: root
 
     property alias cfg_displayAppsView: showAppsView.checked
+    property alias cfg_appsViewSize: appsViewSize.value
     property alias cfg_displayCategories: separateAlph.checked
     property alias cfg_displayToolBar: showToolBar.checked
     property alias cfg_displayUserInfo: showUser.checked
@@ -32,6 +33,13 @@ KCM.SimpleKCM {
             FormCard.FormSwitchDelegate {
                 id: showAppsView
                 text: i18n("Show Applications")
+            }
+            FormCard.FormSpinBoxDelegate {
+                id: appsViewSize
+                label: "App View width"
+                from: 1
+                to: 50
+                stepSize: 1
             }
             FormCard.FormSwitchDelegate {
                 id: separateAlph

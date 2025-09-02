@@ -70,7 +70,7 @@ Item {
             Layout.fillHeight: true
 
             sourceComponent: ColumnLayout {
-                Layout.preferredWidth: Kirigami.Units.gridUnit * 12 + Kirigami.Units.largeSpacing * 2
+                Layout.preferredWidth: appsView.preferredWidth + Kirigami.Units.largeSpacing
                 Layout.fillHeight: true
 
                 AppView {
@@ -83,7 +83,7 @@ Item {
                 PlasmaComponents.TextField {
                     id: searchField
 
-                    Layout.preferredWidth: Kirigami.Units.gridUnit * 12
+                    Layout.preferredWidth: Kirigami.Units.gridUnit * plasmoid.configuration.appsViewSize
                     Layout.preferredHeight: Kirigami.Units.gridUnit * 2
                     Layout.margins: Kirigami.Units.largeSpacing
                     Layout.topMargin: 0
