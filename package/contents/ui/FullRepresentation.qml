@@ -23,8 +23,17 @@ Item {
 
     property bool displayApps: true
 
+    Item {
+        id: expandedView
+        anchors.fill: parent
+
+        property Item currentView: null
+        visible: currentView
+    }
+
+
     Rectangle {
-        visible: plasmoid.configuration.displayAppsView && root.displayApps
+        visible: plasmoid.configuration.displayAppsView && root.displayApps && !expandedView.visible
 
         anchors {
             top: container.top
@@ -47,6 +56,8 @@ Item {
     RowLayout {
         id: container
         anchors.fill: parent
+
+        visible: !expandedView.visible
 
         property var appsModel: rootModel.count ? rootModel.modelForRow(0) : []
         property var searchModel: runnerModel.count ? runnerModel.modelForRow(0) : null
@@ -139,9 +150,9 @@ Item {
                 }
 
                 onExpanded: function (view, data) {
-                    /* if (expandedView.currentView)
+                    if (expandedView.currentView)
                         expandedView.currentView.destroy()
-                        expandedView.currentView = view.createObject(expandedView, data) */
+                    expandedView.currentView = view.createObject(expandedView, data)
                 }
             }
         }
