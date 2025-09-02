@@ -8,6 +8,7 @@ import org.kde.kirigami as Kirigami
 
 Item {
     id: root
+
     width: Kirigami.Units.gridUnit * 1.5 + Kirigami.Units.smallSpacing * 2
     height: width
     property alias source: icon.source
@@ -51,6 +52,7 @@ Item {
         height: parent.width
         color: Kirigami.Theme.highlightColor
         radius: parent.width
+
         opacity: mouseArea.containsMouse || root.activeFocus ? 1 : 0
     }
 }

@@ -18,7 +18,7 @@ ColumnLayout {
     signal toggle
 
     Layout.fillHeight: true
-    width: shutdownIcon.width + Kirigami.Units.smallSpacing
+    width: shutdownIcon.width + Kirigami.Units.smallSpacing * 2
     Layout.alignment: Qt.AlignBottom
 
     Sessions.SessionManagement {
@@ -36,10 +36,16 @@ ColumnLayout {
     Rectangle {
         anchors.fill: root
         color: Kirigami.Theme.backgroundColor
+
+        border.width: 1
+        border.color: Kirigami.Theme.View
+
         opacity: 0.3
     }
 
     ToolbarButton {
+        Layout.margins: Kirigami.Units.smallSpacing
+
         source: "show-menu"
         onActivated: {
         }
@@ -54,6 +60,8 @@ ColumnLayout {
 
         activeFocusOnTab: true
         Layout.alignment: Qt.AlignTop
+
+        Layout.margins: Kirigami.Units.smallSpacing
 
         color: mouseArea.containsMouse || activeFocus? Kirigami.Theme.highlightColor :Kirigami.Theme.backgroundColor
         width: userIcon.width + Kirigami.Units.smallSpacing * 2
@@ -85,6 +93,9 @@ ColumnLayout {
     ToolbarButton {
         id: lockIcon
         visible:plasmoid.configuration.showLockButton
+
+        Layout.margins: Kirigami.Units.smallSpacing
+
         source: "lock"
         hint: "Lock Screen"
         onActivated: {
@@ -95,6 +106,9 @@ ColumnLayout {
     ToolbarButton {
         id: shutdownIcon
         visible:plasmoid.configuration.showLogoutButton
+
+        Layout.margins: Kirigami.Units.smallSpacing
+
         hint: "Power off"
         source: "system-shutdown"
         onActivated: {
