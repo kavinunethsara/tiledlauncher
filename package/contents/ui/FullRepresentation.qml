@@ -21,8 +21,6 @@ Item {
     Layout.minimumHeight: Kirigami.Units.gridUnit * 20
     Layout.preferredWidth: Kirigami.Units.gridUnit * 34 + toolbar.implicitWidth
 
-    property bool displayApps: true
-
     Item {
         id: expandedView
         anchors.fill: parent
@@ -33,7 +31,7 @@ Item {
 
 
     Rectangle {
-        visible: plasmoid.configuration.displayAppsView && root.displayApps && !expandedView.visible
+        visible: plasmoid.configuration.displayAppsView && displayApps && !expandedView.visible
 
         anchors {
             top: container.top

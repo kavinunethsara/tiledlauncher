@@ -15,6 +15,9 @@ import org.kde.plasma.private.kicker as Kicker
 
 PlasmoidItem {
     id: kicker
+
+    property bool displayApps: plasmoid.configuration.defaultAppsViewState
+
     compactRepresentation: CompactRepresentation {
             inPanel: kicker.inPanel
             vertical: kicker.vertical
@@ -23,6 +26,10 @@ PlasmoidItem {
             }
         }
     fullRepresentation: FullRepresentation {}
+
+    onExpandedChanged: {
+        kicker.displayApps = plasmoid.configuration.defaultAppsViewState
+    }
 
     preferredRepresentation: Plasmoid.compactRepresentation
 

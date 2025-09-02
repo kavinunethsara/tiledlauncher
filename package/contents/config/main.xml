@@ -41,6 +41,10 @@
       <default>true</default>
     </entry>
 
+
+    <entry name="defaultAppsViewState" type="Bool">
+      <default>true</default>
+    </entry>
     <entry name="displayCategories" type="Bool">
       <default>true</default>
     </entry>
