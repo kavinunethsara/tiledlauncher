@@ -19,9 +19,10 @@ Item {
     activeFocusOnTab: true
 
     Layout.fillHeight: true
-    Layout.preferredWidth: Kirigami.Units.gridUnit * 12
+    Layout.preferredWidth: Kirigami.Units.gridUnit * 12 + Kirigami.Units.largeSpacing
     Layout.margins: Kirigami.Units.largeSpacing
     Layout.bottomMargin: Kirigami.Units.smallSpacing
+    Layout.rightMargin: 0
 
     signal addTile(metadata: variant)
     signal toggle

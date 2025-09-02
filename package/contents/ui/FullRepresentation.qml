@@ -19,6 +19,23 @@ Item {
     Layout.minimumHeight: Kirigami.Units.gridUnit * 20
     Layout.preferredWidth: Kirigami.Units.gridUnit * 36 + toolbar.implicitWidth
 
+    Rectangle {
+        anchors {
+            top: container.top
+            bottom: container.bottom
+            left: container.left
+            margins:  -1 * Kirigami.Units.smallSpacing
+        }
+        width: toolbar.implicitWidth + appsLoader.implicitWidth + Kirigami.Units.largeSpacing * 2 - Kirigami.Units.smallSpacing
+        color: Kirigami.Theme.backgroundColor
+
+        bottomLeftRadius: Kirigami.Units.cornerRadius
+        topLeftRadius: Kirigami.Units.cornerRadius
+
+        opacity: 0.6
+        z: 0
+    }
+
     RowLayout {
         id: container
         anchors.fill: parent
@@ -30,10 +47,13 @@ Item {
 
         ToolBar {
             id:toolbar
+            z: 1
             visible: plasmoid.configuration.displayToolBar
         }
 
         Loader {
+            id: appsLoader
+            z: 1
             active: plasmoid.configuration.displayAppsView
 
             visible: plasmoid.configuration.displayAppsView
@@ -83,6 +103,8 @@ Item {
         }
 
         Item {
+            id: tileViewContainer
+
             Layout.fillWidth: true
             Layout.fillHeight: true
 
