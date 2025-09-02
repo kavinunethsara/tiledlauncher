@@ -8,9 +8,8 @@ import org.kde.kirigami as Kirigami
 
 Item {
     id: root
-    width: Kirigami.Units.gridUnit * 1.5 + Kirigami.Units.largeSpacing * 2
+    width: Kirigami.Units.gridUnit * 1.5 + Kirigami.Units.smallSpacing * 2
     height: width
-    anchors.top: parent.top
     property alias source: icon.source
     property alias hint: tooltip.text
     activeFocusOnTab: true
@@ -20,7 +19,7 @@ Item {
     Kirigami.Icon {
         id: icon
         anchors.fill: parent
-        anchors.margins: Kirigami.Units.largeSpacing
+        anchors.margins: Kirigami.Units.smallSpacing
         z: 1
     }
 

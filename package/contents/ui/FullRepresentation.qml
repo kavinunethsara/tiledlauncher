@@ -5,222 +5,113 @@
 
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Effects
 import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.private.kicker as Kicker
 
 import './Components'
 import './Components/Tile' as Tile
 
-Kicker.DashboardWindow {
-    id: root
+pragma ComponentBehavior: Bound
 
-    property string currentPage: "home"
-    property Timer activationTimer: Timer {
-        interval: 250
-        running: false
+Item {
+    Layout.minimumHeight: Kirigami.Units.gridUnit * 20
+    Layout.preferredWidth: Kirigami.Units.gridUnit * 36 + toolbar.implicitWidth
 
-    }
-
-    backgroundColor: "transparent"
-
-    onVisibleChanged: {
-        if (visible) {
-            root.currentPage = "home"
-            mainCat.searchText = ""
-            mainCat.grabFocus()
-        }
-        tileView.closeEditor()
-    }
-
-    onCurrentPageChanged: {
-        tileView.closeEditor()
-    }
-
-    function reloadData() {
-    }
-
-    function toggleMode() {
-        if (root.visible) {
-            if (activationTimer.running && root.currentPage == "home") {
-                root.currentPage = "all";
-                return;
-            }
-            activationTimer.stop();
-        } else {
-            activationTimer.start();
-        }
-        root.toggle();
-    }
-
-    Component.onCompleted: {
-        rootModel.refresh();
-        kicker.reset.connect(reloadData);
-    }
-
-
-    mainItem: Item {
+    RowLayout {
+        id: container
         anchors.fill: parent
 
-        Item{
-            id: background
-            anchors.fill: parent
-            opacity: plasmoid.configuration.backgroundOpacity / 100
-            z: 0
-            Image {
-                id: bgImage
-                anchors.fill: parent;
-                visible: plasmoid.configuration.useBackgroundImage
-                source: plasmoid.configuration.backgroundImage
-                opacity: 0
-                fillMode: Image.PreserveAspectCrop
-            }
-            MultiEffect {
-                visible: plasmoid.configuration.useBackgroundImage
-                source: bgImage
-                anchors.fill: bgImage
-                anchors.margins: -64
-                blurEnabled: true
-                // saturation: 10
-                // contrast: 0.2
-                blurMax: 64
-                blur: plasmoid.configuration.backgroundImageBlur / 100
-            }
+        property var appsModel: rootModel.count ? rootModel.modelForRow(0) : []
+        property var searchModel: runnerModel.count ? runnerModel.modelForRow(0) : null
+        property string searchString : ""
+        property var model: (searchString) ? searchModel : appsModel
+
+        ToolBar {
+            id:toolbar
+            visible: plasmoid.configuration.displayToolBar
         }
 
-        Rectangle {
-            anchors.fill: parent
-            color: Kirigami.Theme.backgroundColor
-            opacity: plasmoid.configuration.overlayOpacity / 100
-        }
+        Loader {
+            active: plasmoid.configuration.displayAppsView
 
-        ColumnLayout{
-            id: container
-            anchors.fill: parent
+            visible: plasmoid.configuration.displayAppsView
 
-            ColumnLayout {
-                spacing: Kirigami.Units.smallSpacing * 2
-                Layout.alignment: Qt.AlignHCenter
-                Layout.margins: Kirigami.Units.largeSpacing * 2
-                Layout.bottomMargin: 0
+            Layout.preferredWidth: item? item.Layout.preferredWidth : 0
+            Layout.fillHeight: true
+
+            sourceComponent: ColumnLayout {
+                Layout.preferredWidth: Kirigami.Units.gridUnit * 12 + Kirigami.Units.largeSpacing * 2
                 Layout.fillHeight: true
-                Layout.fillWidth: true
 
-                ToolBar {
-                    id: toolBar
-                    onToggle: {
-                        root.toggle();
-                    }
+                AppView {
+                    id: appsview
+                    model: container.model
+                    small: true
+                    sections: plasmoid.configuration.displayCategories ? "group" : ""
                 }
 
-                Category{
-                    id: mainCat
+                PlasmaComponents.TextField {
+                    id: searchField
 
-                    title: (root.currentPage == "search") ? i18n("Search") :
-                    root.currentPage == "home" ? i18n("Favourites") :
-                    root.currentPage == "all" ? i18n("All Apps") : root.currentPage
+                    Layout.preferredWidth: Kirigami.Units.gridUnit * 12
+                    Layout.preferredHeight: Kirigami.Units.gridUnit * 2
+                    Layout.margins: Kirigami.Units.largeSpacing
+                    Layout.topMargin: 0
+                    Layout.bottomMargin: Kirigami.Units.mediumSpacing
 
-                    action: root.currentPage != "home" ? i18n("Favourites") : i18n("All Apps")
+                    padding: Kirigami.Units.largeSpacing
+                    leftPadding: Kirigami.Units.largeSpacing
+                    rightPadding: Kirigami.Units.largeSpacing
 
-                    Layout.fillHeight: parent? true : false
-                    anchors {
-                        top: toolBar.bottom
-                        bottom: parent.bottom
-                        left: parent.left
-                        right: parent.right
+                    background: Rectangle {
+                        anchors.fill: parent
+                        color: Kirigami.Theme.View
+                        radius: Kirigami.Units.cornerRadius
+                        opacity: 0.25
                     }
 
-                    hasSearch: true
-                    fill: true
-                    useBackground: false
+                    placeholderText: "Search ..."
 
-                    onActivated: {
-                        if (expandedView.currentView) {
-                            expandedView.currentView.destroy()
-                        }
-
-                        if (searchText != "") {
-                            searchText = ""
-                            return
-                        }
-                        if (root.currentPage == "home") {
-                            root.currentPage = "all"
-                        } else {
-                            root.currentPage = "home"
-                        }
+                    onTextChanged: {
+                        runnerModel.query = text
+                        container.searchString = text
                     }
+                }
+            }
+        }
 
-                    onSearchTextChanged: {
-                        if (searchText != "") {
-                            root.currentPage = "search"
-                        } else {
-                            root.currentPage = "home"
-                            return
+        Item {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            Tile.Grid {
+                id: tileView
+
+                property variant appsView: {
+                    return ({
+                        runApp: (url) => {
+                            for (var i = 0; i < container.appsModel.count; i++) {
+                                var modelIndex = container.appsModel.index(i, 0)
+                                var favoriteId = container.appsModel.data(modelIndex, Qt.UserRole + 3)
+                                if (favoriteId == url) {
+                                    container.appsModel.trigger(i, "", null)
+                                    return
+                                }
+                            }
                         }
-                        runnerModel.query = searchText;
-                    }
+                    })
+                }
 
-                    AppView {
-                        id: appsView
-                        visible: root.currentPage == "all"
-                        model: rootModel.count ? rootModel.modelForRow(0) : null
-                        onAddTile: function (metadata) {
-                            tileView.addTile("icon", metadata)
-                        }
-                        onToggle: {
-                            root.toggle()
-                        }
-                    }
+                onToggled: {
+                    kicker.expanded = !kicker.expanded
+                }
 
-                    AppView {
-                        id: searchView
-                        // Forces the function be re-run every time runnerModel.count changes.
-                        // This is absolutely necessary to make the search view work reliably.'
-                        // (From Kickoff source code)
-                        model: runnerModel.count ? runnerModel.modelForRow(0) : null
-                        visible: root.currentPage == "search"
-                        onAddTile: function (metadata) {
-                            tileView.addTile("icon", metadata)
-                        }
-                        onToggle: {
-                            root.toggle()
-                        }
-                    }
-
-                    Tile.Grid {
-                        id: tileView
-                        visible: root.currentPage == "home"
-                        property variant appsView: appsView
-
-                        onToggled: {
-                            root.toggle()
-                        }
-
-                        onExpanded: function (view, data) {
-                            if (expandedView.currentView)
-                                expandedView.currentView.destroy()
-                            expandedView.currentView = view.createObject(expandedView, data)
-                        }
-                    }
-
-                    Item {
-                        id: expandedView
-                        anchors.centerIn: parent
-
-                        property Item currentView: null
-                        visible: currentView
-
-                        width: parent.width / 2
-                        height: parent.height / 2
-
-                        Rectangle {
-                            anchors.fill: parent
-                            color: Kirigami.Theme.backgroundColor
-                            radius: Kirigami.Units.mediumSpacing
-                        }
-
-                    }
+                onExpanded: function (view, data) {
+                    /* if (expandedView.currentView)
+                        expandedView.currentView.destroy()
+                        expandedView.currentView = view.createObject(expandedView, data) */
                 }
             }
         }

@@ -20,6 +20,8 @@ Item {
     required property bool inPanel
     required property bool vertical
 
+    signal toggled
+
     readonly property var sizing: {
         let impWidth = buttonIcon.Layout.preferredWidth;
         if (shouldHaveLabel) {
@@ -46,7 +48,6 @@ Item {
 
     Layout.minimumWidth: sizing.preferredWidth
 
-    signal reset
 
     RowLayout{
         id: rootLayout
@@ -72,32 +73,14 @@ Item {
         }
     }
 
-    FullRepresentation {
-        id: dashWindow
-    }
-
     MouseArea
     {
         id: mouseArea
 
         anchors.fill: parent
-        property bool wasExpanded: false;
-
-        activeFocusOnTab: true
-        hoverEnabled: !dashWindow.visible
 
         onClicked: {
-            dashWindow.toggleMode();
-        }
-    }
-
-    Connections {
-        target: Plasmoid
-        enabled: dashWindow !== null
-
-        function onActivated(): void {
-            dashWindow.toggleMode();
-            //justOpenedTimer.start();
+            root.toggled()
         }
     }
 }

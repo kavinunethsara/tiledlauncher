@@ -8,12 +8,12 @@
             }
         ],
         "Category": "Application Launchers",
-        "Description": "A full-screen launcher inspired by Windows 8 Start Screen",
+        "Description": "A multi-purplose, flexible tile based applet",
         "EnabledByDefault": true,
         "Icon": "start-here-kde",
-        "Id": "com.github.kavinunethsara.tiledscreen",
+        "Id": "com.github.kavinunethsara.tiledlauncher",
         "License": "LGPL-2.1+",
-        "Name": "Tiled Screen",
+        "Name": "Tiled Launcher",
         "Version": "2.0",
         "Website": ""
     },

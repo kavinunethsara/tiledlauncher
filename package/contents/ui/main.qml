@@ -15,21 +15,18 @@ import org.kde.plasma.private.kicker as Kicker
 
 PlasmoidItem {
     id: kicker
-    switchHeight: 0
-    switchWidth: 0
-    preferredRepresentation: fullRepresentation
-    compactRepresentation: null
-    fullRepresentation: compactRepresentationComponent
-
-    signal reset
-
-    Component {
-        id: compactRepresentationComponent
-        CompactRepresentation {
+    compactRepresentation: CompactRepresentation {
             inPanel: kicker.inPanel
             vertical: kicker.vertical
+            onToggled: {
+                kicker.expanded = !kicker.expanded
+            }
         }
-    }
+    fullRepresentation: FullRepresentation {}
+
+    preferredRepresentation: Plasmoid.compactRepresentation
+
+    signal reset
 
     Kicker.RootModel {
         id: rootModel
@@ -42,13 +39,13 @@ PlasmoidItem {
 
         showAllApps: true
         showAllAppsCategorized: false
-        showTopLevelItems: false
+        showTopLevelItems: true
         showRecentApps: false
         showRecentDocs: false
         showFavoritesPlaceholder: false
 
         Component.onCompleted: {
-            favoritesModel.initForClient("whjjackwhite.tiledscreen.favorites.instance-" + Plasmoid.id)
+            favoritesModel.initForClient("whjjackwhite.tiledlauncher.favorites.instance-" + Plasmoid.id)
 
             if (!Plasmoid.configuration.favoritesPortedToKAstats) {
                 if (favoritesModel.count < 1) {
@@ -70,25 +67,14 @@ PlasmoidItem {
         runners: []
     }
 
-    Kicker.WindowSystem {
-        id: windowSystem
-    }
-
     Connections {
         target: kicker
 
         function onExpandedChanged(expanded) {
-            if (expanded) {
-                windowSystem.monitorWindowVisibility(Plasmoid.fullRepresentationItem);
-                //justOpenedTimer.start();
-            } else {
-                kicker.reset();
+            if (!expanded) {
+               kicker.reset();
             }
         }
-    }
-
-    function enableHideOnWindowDeactivate() {
-        kicker.hideOnWindowDeactivate = true;
     }
 
     Component.onCompleted: {
@@ -96,11 +82,7 @@ PlasmoidItem {
             Plasmoid.activationTogglesExpanded = false
         }
 
-        windowSystem.focusIn.connect(enableHideOnWindowDeactivate);
-        kicker.hideOnWindowDeactivate = true;
-
         rootModel.refreshed.connect(reset);
-        runnerModel.completed.connect(reset);
         if (rootModel.status == Component.Ready) rootModel.refresh();
 
     }

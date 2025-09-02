@@ -10,27 +10,29 @@ import org.kde.plasma.components as PlasmaComponents
 Item {
     id: root
     required property variant model
-    property real itemWidth: Kirigami.Units.gridUnit * 14
     property bool small: false
     required property variant itemController
     signal toggle
 
-    height: content.implicitHeight
-    width: root.itemWidth - Kirigami.Units.gridUnit * 2
+    height: Kirigami.Units.gridUnit * 2
+    anchors.left: parent.left
+    anchors.right: parent.right
 
     RowLayout {
         id: content
-        Layout.fillWidth: true
+        anchors.fill: parent
+
         Kirigami.Icon {
             id: icon
-            Layout.margins: Kirigami.Units.largeSpacing
+            Layout.alignment: Qt.AlignVCenter
+            Layout.margins:  Kirigami.Units.smallSpacing
             Layout.preferredWidth: root.small ? Kirigami.Units.gridUnit : Kirigami.Units.gridUnit * 2
             source: root.model.decoration
         }
         PlasmaComponents.Label {
             Layout.fillWidth: true
-            Layout.maximumWidth: root.width - 5 * Kirigami.Units.largeSpacing - icon.implicitWidth
-            Layout.margins:  Kirigami.Units.largeSpacing
+            Layout.fillHeight: true
+            verticalAlignment: Qt.AlignVCenter
             text: root.model.display
             elide: Qt.ElideRight
         }
