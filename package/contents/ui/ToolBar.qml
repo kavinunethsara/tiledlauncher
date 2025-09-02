@@ -46,8 +46,13 @@ ColumnLayout {
     ToolbarButton {
         Layout.margins: Kirigami.Units.smallSpacing
 
+        visible: plasmoid.configuration.displayAppsView
+        toggled: !displayApps
+
         source: "show-menu"
+        hint: i18n("Hide Applications")
         onActivated: {
+            displayApps = !displayApps
         }
     }
 

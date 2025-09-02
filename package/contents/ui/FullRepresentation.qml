@@ -16,19 +16,27 @@ import './Components/Tile' as Tile
 pragma ComponentBehavior: Bound
 
 Item {
+    id: root
+
     Layout.minimumHeight: Kirigami.Units.gridUnit * 20
-    Layout.preferredWidth: Kirigami.Units.gridUnit * 36 + toolbar.implicitWidth
+    Layout.preferredWidth: Kirigami.Units.gridUnit * 34 + toolbar.implicitWidth
+
+    property bool displayApps: true
 
     Rectangle {
+        visible: plasmoid.configuration.displayAppsView && root.displayApps
+
         anchors {
             top: container.top
             bottom: container.bottom
             left: container.left
             margins:  -1 * Kirigami.Units.smallSpacing
         }
-        width: toolbar.implicitWidth + appsLoader.implicitWidth + Kirigami.Units.largeSpacing * 2 - Kirigami.Units.smallSpacing
-        color: Kirigami.Theme.backgroundColor
 
+        property int appsWidth: appsLoader.implicitWidth - Kirigami.Units.smallSpacing
+        width: toolbar.implicitWidth + appsWidth + Kirigami.Units.largeSpacing * 2
+
+        color: Kirigami.Theme.backgroundColor
         bottomLeftRadius: Kirigami.Units.cornerRadius
         topLeftRadius: Kirigami.Units.cornerRadius
 
@@ -56,7 +64,7 @@ Item {
             z: 1
             active: plasmoid.configuration.displayAppsView
 
-            visible: plasmoid.configuration.displayAppsView
+            visible: plasmoid.configuration.displayAppsView && displayApps
 
             Layout.preferredWidth: item? item.Layout.preferredWidth : 0
             Layout.fillHeight: true

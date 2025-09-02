@@ -13,6 +13,7 @@ Item {
     height: width
     property alias source: icon.source
     property alias hint: tooltip.text
+    property bool toggled: false
     activeFocusOnTab: true
 
     signal activated
@@ -53,6 +54,6 @@ Item {
         color: Kirigami.Theme.highlightColor
         radius: parent.width
 
-        opacity: mouseArea.containsMouse || root.activeFocus ? 1 : 0
+        opacity: mouseArea.containsMouse || root.activeFocus || root.toggled ? 0.6 : 0
     }
 }
