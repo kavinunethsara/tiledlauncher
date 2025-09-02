@@ -21,6 +21,20 @@ Item {
     Layout.minimumHeight: Kirigami.Units.gridUnit * 20
     Layout.preferredWidth: Kirigami.Units.gridUnit * 34 + toolbar.implicitWidth
 
+    property bool dummyProp: displayApps && expanded
+
+    onDummyPropChanged: {
+        if (!appsLoader.active) return;
+        appsLoader.item.sfield.text = ""
+    }
+
+    Keys.onPressed: function (button) {
+        if (button.text != "")
+            displayApps = true
+    }
+
+    Keys.forwardTo: [appsLoader.active ? appsLoader.item.sfield : tileView]
+
     Item {
         id: expandedView
         anchors.fill: parent
@@ -28,7 +42,6 @@ Item {
         property Item currentView: null
         visible: currentView
     }
-
 
     Rectangle {
         visible: plasmoid.configuration.displayAppsView && displayApps && !expandedView.visible
@@ -66,6 +79,31 @@ Item {
             id:toolbar
             z: 1
             visible: plasmoid.configuration.displayToolBar
+
+            Keys.onPressed: function (button) {
+                if (button.text != "")
+                    displayApps = true
+            }
+        }
+
+        // Editor Sidebar
+        Tile.Editor {
+            id: editor_sidebar
+
+            Layout.preferredWidth: Kirigami.Units.gridUnit * plasmoid.configuration.appsViewSize + Kirigami.Units.largeSpacing * 2
+            Layout.fillHeight: true
+
+            property bool prevAppState: false
+            onVisibleChanged: {
+                if (visible) {
+                    prevAppState = displayApps
+                    displayApps = false
+                } else {
+                    displayApps = prevAppState
+                }
+            }
+
+            onCloseClicked: tileView.closeEditor()
         }
 
         Loader {
@@ -82,11 +120,22 @@ Item {
                 Layout.preferredWidth: appsView.preferredWidth + Kirigami.Units.largeSpacing
                 Layout.fillHeight: true
 
+                property alias sfield: searchField
+
                 AppView {
                     id: appsview
                     model: container.model
                     small: true
                     sections: plasmoid.configuration.displayCategories ? "group" : ""
+
+                    Keys.onPressed: function (button) {
+                        if (button.text != "")
+                            displayApps = true
+                    }
+
+                    onToggle: {
+                        expanded = !expanded
+                    }
                 }
 
                 PlasmaComponents.TextField {
@@ -97,6 +146,8 @@ Item {
                     Layout.margins: Kirigami.Units.largeSpacing
                     Layout.topMargin: 0
                     Layout.bottomMargin: Kirigami.Units.mediumSpacing
+
+                    focus: true
 
                     padding: Kirigami.Units.largeSpacing
                     leftPadding: Kirigami.Units.largeSpacing
@@ -112,6 +163,8 @@ Item {
                     placeholderText: "Search ..."
 
                     onTextChanged: {
+                        if (text != "")
+                            displayApps = true
                         runnerModel.query = text
                         container.searchString = text
                     }
@@ -127,6 +180,8 @@ Item {
 
             Tile.Grid {
                 id: tileView
+
+                sidebar: editor_sidebar
 
                 property variant appsView: {
                     return ({
@@ -147,10 +202,17 @@ Item {
                     kicker.expanded = !kicker.expanded
                 }
 
+                property bool appState: false
+
                 onExpanded: function (view, data) {
                     if (expandedView.currentView)
                         expandedView.currentView.destroy()
                     expandedView.currentView = view.createObject(expandedView, data)
+                }
+
+                Keys.onPressed: function (button) {
+                    if (button.text != "")
+                        displayApps = true
                 }
             }
         }
