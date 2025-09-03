@@ -18,6 +18,8 @@ Item {
     anchors.left: parent.left
     anchors.right: parent.right
 
+    property alias mouse: mouseArea
+
     RowLayout {
         id: content
         anchors.fill: parent
@@ -39,6 +41,7 @@ Item {
     }
 
     MouseArea{
+        id: mouseArea
         anchors.fill: parent
         acceptedButtons: Qt.RightButton | Qt.LeftButton
         onClicked: function (mouse) {

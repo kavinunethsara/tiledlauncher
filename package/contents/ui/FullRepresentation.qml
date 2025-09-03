@@ -12,6 +12,7 @@ import org.kde.plasma.private.kicker as Kicker
 
 import './Components'
 import './Components/Tile' as Tile
+import './Components/Tutorial' as Tutorial
 
 pragma ComponentBehavior: Bound
 
@@ -43,8 +44,10 @@ Item {
         visible: currentView
     }
 
+    Tutorial.Guide {}
+
     Rectangle {
-        visible: plasmoid.configuration.displayAppsView && displayApps && !expandedView.visible
+        visible: plasmoid.configuration.displayAppsView && displayApps && !expandedView.visible && !plasmoid.configuration.firstRun
 
         anchors {
             top: container.top
@@ -68,7 +71,7 @@ Item {
         id: container
         anchors.fill: parent
 
-        visible: !expandedView.visible
+        visible: !expandedView.visible && !plasmoid.configuration.firstRun
 
         property var appsModel: rootModel.count ? rootModel.modelForRow(0) : []
         property var searchModel: runnerModel.count ? runnerModel.modelForRow(0) : null
@@ -136,6 +139,10 @@ Item {
                     onToggle: {
                         expanded = !expanded
                     }
+
+                    onAddTile: function (metadata) {
+                        tileView.addTile("icon", metadata)
+                    }
                 }
 
                 PlasmaComponents.TextField {
@@ -181,6 +188,7 @@ Item {
             Tile.Grid {
                 id: tileView
 
+                invisibleScrollbars: true
                 sidebar: editor_sidebar
 
                 property variant appsView: {
