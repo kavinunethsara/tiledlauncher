@@ -27,6 +27,7 @@ Item {
     signal addTile(metadata: variant)
     signal toggle
 
+    property alias listview: list
     property alias delegate: list.delegate
     property alias model: list.model
     property alias sections: list.section.property

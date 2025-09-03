@@ -140,11 +140,6 @@ Item {
                     small: true
                     sections: plasmoid.configuration.displayCategories ? "group" : ""
 
-                    Keys.onPressed: function (button) {
-                        if (button.text != "")
-                            displayApps = true
-                    }
-
                     onToggle: {
                         expanded = !expanded
                     }
@@ -174,6 +169,24 @@ Item {
                         color: Kirigami.Theme.View
                         radius: Kirigami.Units.cornerRadius
                         opacity: 0.25
+                    }
+
+                    Keys.onDownPressed: {
+                        if (appsview.listview.currentIndex < appsview.listview.count - 1)
+                            appsview.listview.currentIndex += 1
+                    }
+
+                    Keys.onUpPressed: {
+                        if (appsview.listview.currentIndex > 0)
+                            appsview.listview.currentIndex -= 1
+                    }
+
+                    Keys.onReturnPressed: {
+                        appsview.listview.currentItem.trigger()
+                    }
+
+                    Keys.onEnterPressed: {
+                        appsview.listview.currentItem.trigger()
                     }
 
                     placeholderText: "Search ..."
