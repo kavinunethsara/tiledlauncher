@@ -44,7 +44,12 @@ Item {
         visible: currentView
     }
 
-    Tutorial.Guide {}
+    Loader {
+        visible: plasmoid.configuration.firstRun
+        anchors.fill: parent
+        active: plasmoid.configuration.firstRun
+        sourceComponent:Tutorial.Guide {}
+    }
 
     Rectangle {
         visible: plasmoid.configuration.displayAppsView && displayApps && !expandedView.visible && !plasmoid.configuration.firstRun
