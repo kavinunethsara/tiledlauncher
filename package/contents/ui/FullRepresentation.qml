@@ -30,8 +30,12 @@ Item {
     }
 
     Keys.onPressed: function (button) {
-        if (button.text != "")
+        if (button.text != "") {
+            const prevDisp = displayApps
             displayApps = true
+            if (appsLoader.active && !prevDisp)
+                appsLoader.item.sfield.text += button.text
+        }
     }
 
     Keys.forwardTo: [appsLoader.active ? appsLoader.item.sfield : tileView]
@@ -224,8 +228,12 @@ Item {
                 }
 
                 Keys.onPressed: function (button) {
-                    if (button.text != "")
+                    if (button.text != "") {
+                        const prevDisp = displayApps
                         displayApps = true
+                        if (appsLoader.active && !prevDisp)
+                            appsLoader.item.sfield.text += button.text
+                    }
                 }
             }
         }
