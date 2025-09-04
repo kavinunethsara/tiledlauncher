@@ -196,6 +196,7 @@ Item {
                             displayApps = true
                         runnerModel.query = text
                         container.searchString = text
+                        appsview.listview.currentIndex = 0
                     }
                 }
             }
