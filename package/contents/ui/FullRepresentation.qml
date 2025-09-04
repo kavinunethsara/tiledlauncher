@@ -5,10 +5,8 @@
 
 import QtQuick
 import QtQuick.Layouts
-import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components as PlasmaComponents
 import org.kde.kirigami as Kirigami
-import org.kde.plasma.private.kicker as Kicker
 
 import './Components'
 import './Components/Tile' as Tile
@@ -27,6 +25,8 @@ Item {
     onDummyPropChanged: {
         if (!appsLoader.active) return;
         appsLoader.item.sfield.text = ""
+        appsLoader.item.allapps.listview.currentIndex = 0
+        appsLoader.forceActiveFocus()
     }
 
     Keys.onPressed: function (button) {
@@ -133,6 +133,7 @@ Item {
                 Layout.fillHeight: true
 
                 property alias sfield: searchField
+                property alias allapps: appsview
 
                 AppView {
                     id: appsview
@@ -169,6 +170,13 @@ Item {
                         color: Kirigami.Theme.View
                         radius: Kirigami.Units.cornerRadius
                         opacity: 0.25
+                    }
+
+                    Keys.onReleased: function (event) {
+                        if (text == " " && event.text == " ") {
+                            event.accepted = true
+                            text=""
+                        }
                     }
 
                     Keys.onDownPressed: {
