@@ -17,7 +17,7 @@ pragma ComponentBehavior: Bound
 Item {
     id: root
 
-    Layout.minimumHeight: Kirigami.Units.gridUnit * 20
+    Layout.preferredHeight: Kirigami.Units.gridUnit * 20
     Layout.preferredWidth: Kirigami.Units.gridUnit * 34 + toolbar.implicitWidth
 
     property bool dummyProp: displayApps && expanded
