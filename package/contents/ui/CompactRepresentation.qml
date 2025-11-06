@@ -23,7 +23,7 @@ Item {
     signal toggled
 
     readonly property var sizing: {
-        let impWidth = buttonIcon.Layout.preferredWidth;
+        let impWidth = buttonIcon.implicitWidth;
         if (shouldHaveLabel) {
             impWidth += buttonLabel.contentWidth + buttonLabel.Layout.leftMargin + buttonLabel.Layout.rightMargin;
         }
@@ -32,7 +32,7 @@ Item {
         if (inPanel) {
             if (vertical) {
                 return {
-                    preferredWidth: buttonIcon.Layout.preferredWidth,
+                    preferredWidth: buttonIcon.implicitWidth,
                 };
             } else { // horizontal
                 return {
@@ -58,7 +58,7 @@ Item {
 
             Layout.fillHeight: true
             Layout.minimumWidth: implicitHeight
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            Layout.alignment: root.shouldHaveLabel ? Qt.AlignVCenter | Qt.AlignHCenter : Qt.AlignVCenter | Qt.AlignLeft
             source: plasmoid.configuration.icon
             active: mouseArea.containsMouse
             smooth: true
