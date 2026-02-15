@@ -14,7 +14,7 @@
         "Id": "com.github.kavinunethsara.tiledlauncher",
         "License": "LGPL-2.1+",
         "Name": "Tiled Launcher",
-        "Version": "2.0",
+        "Version": "2.2",
         "Website": ""
     },
     "X-Plasma-API-Minimum-Version": "6.0",
