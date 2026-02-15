@@ -29,6 +29,12 @@ Item {
         appsLoader.forceActiveFocus()
     }
 
+    Keys.onReleased: event => {
+        if ([Qt.Key_Left, Qt.Key_Right, Qt.Key_Up, Qt.Key_Down].includes(event.key)) {
+            tileView.handleKeys(event);
+        }
+    }
+
     Keys.onPressed: function (button) {
         if (button.text != "") {
             const prevDisp = displayApps
@@ -128,6 +134,16 @@ Item {
             Layout.preferredWidth: item? item.Layout.preferredWidth : 0
             Layout.fillHeight: true
 
+            onActiveChanged: {
+                if (active)
+                    forceActiveFocus();
+            }
+
+            onVisibleChanged: {
+                if (visible)
+                    forceActiveFocus();
+            }
+
             sourceComponent: ColumnLayout {
                 Layout.preferredWidth: appsView.preferredWidth + Kirigami.Units.largeSpacing
                 Layout.fillHeight: true
@@ -205,6 +221,8 @@ Item {
                         runnerModel.query = text
                         container.searchString = text
                         appsview.listview.currentIndex = 0
+
+                        forceActiveFocus();
                     }
                 }
             }
